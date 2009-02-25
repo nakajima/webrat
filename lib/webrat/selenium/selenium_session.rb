@@ -165,10 +165,12 @@ module Webrat
     webrat_deprecate :browser, :selenium
 
 
-    def save_and_open_screengrab
+    def save_and_open_screengrab(name)
       return unless File.exist?(saved_page_dir)
+      
+      name.gsub!(%r([^a-z0-9\-\_])i, '-')
 
-      filename = "#{saved_page_dir}/webrat-#{Time.now.to_i}.png"
+      filename = "#{saved_page_dir}/#{name}.png"
 
       if $browser.chrome_backend?
         $browser.capture_entire_page_screenshot(filename, '')

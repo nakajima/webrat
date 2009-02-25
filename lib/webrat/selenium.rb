@@ -83,8 +83,8 @@ module Webrat
         webrat_session.wait_for(*args, &block)
       end
 
-      def save_and_open_screengrab
-        webrat_session.save_and_open_screengrab
+      def save_and_open_screengrab(name="webrat-#{Time.now.to_i}")
+        webrat_session.save_and_open_screengrab(name)
       end
     end
   end
