@@ -5,10 +5,12 @@ module Webrat
     # 
     # Example:
     #   save_and_open_page
-    def save_and_open_page
+    def save_and_open_page(name="webrat-#{Time.now.to_i}")
       return unless File.exist?(saved_page_dir)
+      
+      name.gsub!(%r([^a-z0-9\-\_])i, '-')
 
-      filename = "#{saved_page_dir}/webrat-#{Time.now.to_i}.html"
+      filename = "#{saved_page_dir}/#{name}.html"
       
       File.open(filename, "w") do |f|
         f.write rewrite_css_and_image_references(response_body)
@@ -32,7 +34,7 @@ module Webrat
     end
     
     def saved_page_dir #:nodoc:
-      File.expand_path(".")
+      File.expand_path(Dir.pwd)
     end
     
     def doc_root #:nodoc:
@@ -40,7 +42,7 @@ module Webrat
     end
   
   private
-
+  
     # accessor for testing
     def ruby_platform
       RUBY_PLATFORM

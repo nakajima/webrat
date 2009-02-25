@@ -44,8 +44,26 @@ describe "save_and_open_page" do
     save_and_open_page
   end
   
-  def filename
-    File.expand_path("./webrat-#{Time.now}.html")
+  describe 'with custom tmp filename' do
+    before(:each) do
+      File.stub!(:open).with(filename('home-page'), 'w').and_yield(@file_handle)
+    end
+    
+    it "should allow custom name for saved tmp file" do
+      webrat_session.should_receive(:open_in_browser).with(filename('home-page'))
+      save_and_open_page('home-page')
+    end
+    
+    ['/', ' ', '*', ')', '%', '!'].each do |bad_character|
+      it "escapes '#{bad_character}'" do
+        webrat_session.should_receive(:open_in_browser).with(filename('home-page'))
+        save_and_open_page("home#{bad_character}page")
+      end
+    end
+  end
+  
+  def filename(name="webrat-#{Time.now}")
+    File.expand_path(File.join(Dir.pwd, "#{name}.html"))
   end
 
 end
